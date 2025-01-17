@@ -5,28 +5,28 @@ const Footer = () => {
     <footer>
       <Container className='mt-3 py-2'>
         <Row>
-          <Col>
+          <Col className='text-center'>
             <p>
               <a href='#' alt='footer link' className='footerLinks'>
                 Who we are
               </a>
             </p>
           </Col>
-          <Col>
+          <Col className='text-center'>
             <p>
               <a href='#' alt='footer link' className='footerLinks'>
                 policies
               </a>
             </p>
           </Col>
-          <Col>
+          <Col className='text-center'>
             <p>
               <a href='#' alt='footer link' className='footerLinks'>
                 Privacy
               </a>
             </p>
           </Col>
-          <Col>
+          <Col className='text-center'>
             <p>
               <a href='#' alt='footer link' className='footerLinks'>
                 Contact us
