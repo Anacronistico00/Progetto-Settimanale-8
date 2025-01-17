@@ -41,10 +41,18 @@ const DisplayWeather = (props) => {
       const data = await response.json();
       console.log('Dati Geografici:', data);
       if (props.weatherByPosition) {
-        setCounty(data.address.county);
+        if (data.address.county) {
+          setCounty(data.address.county);
+        } else {
+          setCounty(data.address.country);
+        }
       }
       if (props.weatherByName) {
-        setCounty(data.address.county);
+        if (data.address.county) {
+          setCounty(data.address.county);
+        } else {
+          setCounty(data.address.country);
+        }
       }
 
       return data;
@@ -87,11 +95,9 @@ const DisplayWeather = (props) => {
         }}
         className='text-white'
       >
-        <h2 className='fs-bolder text-white'>
-          Weather for your current location
-        </h2>
+        <h2 className='fs-bolder'>Weather for your current location</h2>
         <p>
-          Location: {props.weatherByPosition.name},
+          Location: {props.weatherByPosition.name},{county},
           {props.weatherByPosition.sys.country}
         </p>
         <p>Temperature: {props.weatherByPosition.main.temp.toFixed(1)}°C</p>
@@ -116,12 +122,12 @@ const DisplayWeather = (props) => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
+        className='text-white'
       >
-        <h2 className='fs-bolder text-white'>
-          Weather for {props.weatherByName.name}
-        </h2>
+        <h2 className='fs-bolder '>Weather for {props.weatherByName.name}</h2>
         <p>
-          Location: {props.weatherByName.name},{props.weatherByName.sys.country}
+          Location: {props.weatherByName.name}, {county},
+          {props.weatherByName.sys.country}
         </p>
         <p>Temperature: {props.weatherByName.main.temp.toFixed(1)}°C</p>
         <p>Weather: {props.weatherByName.weather[0].description}</p>
