@@ -3,38 +3,76 @@ const apiKeyPixabay = '48284475-42c6fed8456debbb2c2e99314';
 
 const DisplayWeather = (props) => {
   const [imageUrl, setImageUrl] = useState('');
+  const [county, setCounty] = useState('');
 
-  useEffect(() => {
-    // Funzione per cercare una foto su Pixabay
-    const getRandomImage = async () => {
+  const getRandomImage = async (county) => {
+    if (props.weatherByPosition) {
+      try {
+        const response = await fetch(
+          `https://pixabay.com/api/?key=${apiKeyPixabay}&q=${county}&image_type=photo&orientation=vertical`
+        );
+        const data = await response.json();
+        setImageUrl(data.hits[0]?.webformatURL);
+      } catch (error) {
+        console.log('Error fetching image:', error);
+      }
+    }
+    if (props.weatherByName) {
+      try {
+        const response = await fetch(
+          `https://pixabay.com/api/?key=${apiKeyPixabay}&q=${county}&image_type=photo&orientation=vertical`
+        );
+        const data = await response.json();
+        setImageUrl(data.hits[0]?.webformatURL);
+      } catch (error) {
+        console.log('Error fetching image:', error);
+      }
+    }
+  };
+
+  const reverseGeocode = async (latitude, longitude) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      );
+      if (!response.ok) {
+        throw new Error('Errore nel recupero dei dati');
+      }
+      const data = await response.json();
+      console.log('Dati Geografici:', data);
       if (props.weatherByPosition) {
-        try {
-          const response = await fetch(
-            `https://pixabay.com/api/?key=${apiKeyPixabay}&q=${props.weatherByPosition.name}&image_type=photo&orientation=vertical`
-          );
-          const data = await response.json();
-          setImageUrl(data.hits[0]?.webformatURL);
-        } catch (error) {
-          console.log('Error fetching image:', error);
-        }
+        setCounty(data.address.county);
       }
       if (props.weatherByName) {
-        try {
-          const response = await fetch(
-            `https://pixabay.com/api/?key=${apiKeyPixabay}&q=${props.weatherByName.name}&image_type=photo&orientation=vertical`
-          );
-          const data = await response.json();
-          setImageUrl(data.hits[0]?.webformatURL);
-        } catch (error) {
-          console.log('Error fetching image:', error);
-        }
+        setCounty(data.address.county);
       }
-    };
 
-    if (props.weatherByPosition) {
-      getRandomImage();
+      return data;
+    } catch (error) {
+      console.error('Errore:', error);
     }
-  }, [props.weatherByPosition, props.weatherByname]);
+  };
+
+  useEffect(() => {
+    if (props.weatherByPosition) {
+      reverseGeocode(
+        props.weatherByPosition.coord.lat,
+        props.weatherByPosition.coord.lon
+      );
+    }
+    if (props.weatherByName) {
+      reverseGeocode(
+        props.weatherByName.coord.lat,
+        props.weatherByName.coord.lon
+      );
+    }
+  }, [props.weatherByPosition, props.weatherByName]);
+
+  useEffect(() => {
+    if (county) {
+      getRandomImage(county);
+    }
+  }, [county]);
 
   if (props.weatherByPosition) {
     return (
@@ -67,7 +105,7 @@ const DisplayWeather = (props) => {
     );
   }
 
-  if (props.weatherByname) {
+  if (props.weatherByName) {
     return (
       <div
         style={{
@@ -79,14 +117,16 @@ const DisplayWeather = (props) => {
           backgroundPosition: 'center',
         }}
       >
-        <h2>Weather for {props.weatherByname.name}</h2>
+        <h2 className='fs-bolder text-white'>
+          Weather for {props.weatherByName.name}
+        </h2>
         <p>
-          Location: {props.weatherByname.name},{props.weatherByname.sys.country}
+          Location: {props.weatherByName.name},{props.weatherByName.sys.country}
         </p>
-        <p>Temperature: {props.weatherByname.main.temp.toFixed(1)}°C</p>
-        <p>Weather: {props.weatherByname.weather[0].description}</p>
+        <p>Temperature: {props.weatherByName.main.temp.toFixed(1)}°C</p>
+        <p>Weather: {props.weatherByName.weather[0].description}</p>
         <img
-          src={`http://openweathermap.org/img/wn/${props.weatherByname.weather[0].icon}@2x.png`}
+          src={`http://openweathermap.org/img/wn/${props.weatherByName.weather[0].icon}@2x.png`}
           alt='weather icon'
           style={{ width: '50px', height: '50px' }}
         />

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import DisplayWeather from './DisplayWeather';
-import { Col, Row } from 'react-bootstrap';
 
 const apiKey = 'c0f05cf525dd8d5e671bdcd5e5846d00';
 
@@ -77,21 +76,15 @@ const MainComponent = () => {
   }, [searchedCity]);
 
   return (
-    <main className='container-fluid text-center'>
-      <Row className='justify-content-center'>
-        <Col xs={12} md={8}>
-          <SearchBar getCity={getCity} />
-        </Col>
+    <main className='container-fluid text-center p-0 mt-2'>
+      <SearchBar getCity={getCity} />
 
-        <Col xs={12} md={8}>
-          {!isSearchingByCity && loadingPosition && (
-            <DisplayWeather weatherByPosition={weatherByPosition} />
-          )}
-          {isSearchingByCity && loadingCity && (
-            <DisplayWeather weatherByname={weatherByName} />
-          )}
-        </Col>
-      </Row>
+      {!isSearchingByCity && loadingPosition && (
+        <DisplayWeather weatherByPosition={weatherByPosition} />
+      )}
+      {isSearchingByCity && loadingCity && (
+        <DisplayWeather weatherByName={weatherByName} />
+      )}
     </main>
   );
 };
