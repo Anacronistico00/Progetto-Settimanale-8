@@ -59,7 +59,7 @@ const MainComponent = () => {
   const getWeatherBySearch = async () => {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?q=${searchedCity}&units=metric&appid=${apiKey}`
       );
 
       if (!response.ok) {
