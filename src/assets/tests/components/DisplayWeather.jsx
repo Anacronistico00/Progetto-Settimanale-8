@@ -99,7 +99,7 @@ const DisplayWeather = (props) => {
           >
             <h2 className='fs-bolder'>Weather for your current location</h2>
             <p>
-              Location: {props.weatherByPosition.name},{county},
+              Location: {props.weatherByPosition.city.name},{county},
               {props.weatherByPosition.city.country}
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -217,9 +217,11 @@ const DisplayWeather = (props) => {
             }}
             className='text-white'
           >
-            <h2 className='fs-bolder'>Weather for your current location</h2>
+            <h2 className='fs-bolder'>
+              Weather for {props.weatherByName.city.name}
+            </h2>
             <p>
-              Location: {props.weatherByName.name},{county},
+              Location: {props.weatherByName.city.name},{county},
               {props.weatherByName.city.country}
             </p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
