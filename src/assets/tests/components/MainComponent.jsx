@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import SearchBar from './SearchBar';
 import DisplayWeather from './DisplayWeather';
+import { Alert, Spinner } from 'react-bootstrap';
 
 const apiKey = 'c0f05cf525dd8d5e671bdcd5e5846d00';
 
@@ -13,6 +14,8 @@ const MainComponent = () => {
   const [loadingPosition, setLoadingPosition] = useState(false);
   const [loadingCity, setLoadingCity] = useState(false);
   const [isSearchingByCity, setIsSearchingByCity] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
 
   const getCity = (cityName) => {
     setSearchedCity(cityName);
@@ -21,7 +24,7 @@ const MainComponent = () => {
   const getWeatherByPosition = async () => {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
       );
 
       if (!response.ok) {
@@ -33,8 +36,12 @@ const MainComponent = () => {
       setWeatherByPosition(data);
       setLoadingPosition(true);
       setIsSearchingByCity(false);
+      setIsLoading(false);
+      setIsError(false);
     } catch (error) {
       console.log('error', error);
+      setIsLoading(false);
+      setIsError(true);
     }
   };
 
@@ -52,7 +59,7 @@ const MainComponent = () => {
   const getWeatherBySearch = async () => {
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${searchedCity}&units=metric&appid=${apiKey}`
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`
       );
 
       if (!response.ok) {
@@ -64,8 +71,12 @@ const MainComponent = () => {
       setWeatherByName(data);
       setLoadingCity(true);
       setIsSearchingByCity(true);
+      setIsLoading(false);
+      setIsError(false);
     } catch (error) {
       console.log('error', error);
+      setIsLoading(false);
+      setIsError(true);
     }
   };
 
@@ -79,11 +90,54 @@ const MainComponent = () => {
     <main className='container-fluid text-center p-0 mt-2'>
       <SearchBar getCity={getCity} />
 
-      {!isSearchingByCity && loadingPosition && (
-        <DisplayWeather weatherByPosition={weatherByPosition} />
+      {!isSearchingByCity && loadingPosition && !isLoading && !isError && (
+        <DisplayWeather
+          weatherByPosition={weatherByPosition}
+          isLoading={isLoading}
+          isError={isError}
+        />
       )}
-      {isSearchingByCity && loadingCity && (
-        <DisplayWeather weatherByName={weatherByName} />
+      {isSearchingByCity && loadingCity && !isLoading && !isError && (
+        <DisplayWeather
+          weatherByName={weatherByName}
+          isLoading={isLoading}
+          isError={isError}
+        />
+      )}
+
+      {isLoading && (
+        <div className='text-center'>
+          <div>
+            <p>Caricamento in corso...</p>
+
+            <Spinner
+              animation='grow'
+              size='sm'
+              variant='info'
+              className='ms-2'
+            />
+            <Spinner
+              animation='grow'
+              size='sm'
+              variant='info'
+              className='ms-2'
+            />
+            <Spinner
+              animation='grow'
+              size='sm'
+              variant='info'
+              className='ms-2'
+            />
+          </div>
+        </div>
+      )}
+
+      {isError && (
+        <div className='text-center'>
+          <Alert variant='danger'>
+            Si è verificato un errore <br /> Impossibile Caricare i dati
+          </Alert>
+        </div>
       )}
     </main>
   );

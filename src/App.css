@@ -23,3 +23,29 @@ body {
 .headerLogo {
   width: 100px;
 }
+
+/* MAIN */
+
+.weatherItem {
+  background-color: rgba(0, 0, 0, 0.326);
+}
+
+/* FOOTER */
+footer {
+  background-color: #8c9495;
+}
+
+.footerLinks {
+  text-decoration: none;
+  color: white;
+  font-weight: bolder;
+}
+
+.footerLinks:hover {
+  color: grey;
+}
+
+.footerInfo p {
+  font-size: 12px !important;
+  margin: 0;
+}
