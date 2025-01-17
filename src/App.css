@@ -1,0 +1,25 @@
+/* RESET */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background-color: #b8c4c5;
+  font-family: 'Titillium Web', serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* HEADER */
+
+.header {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #858d8e;
+}
+
+.headerLogo {
+  width: 100px;
+}
